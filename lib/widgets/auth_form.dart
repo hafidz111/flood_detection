@@ -1,7 +1,7 @@
+import 'package:flood_detection/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/auth_provider.dart';
 import '../utils/validator_utils.dart';
 import 'auth_input_field.dart';
 import 'logo_header.dart';
@@ -27,88 +27,60 @@ class AuthForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-
-    return Stack(
+    return Column(
       children: [
-        Column(
-          children: [
-            const LogoHeader(),
-            const SizedBox(height: 60),
+        const LogoHeader(),
+        const SizedBox(height: 60),
 
-            AuthInputField(
-              controller: emailController,
-              hintText: 'Email',
-              keyboardType: TextInputType.emailAddress,
-              validator: ValidatorUtil.emailValidator,
-            ),
-            const SizedBox(height: 16),
-
-            AuthInputField(
-              controller: passwordController,
-              hintText: 'Password',
-              obscureText: true,
-              validator: ValidatorUtil.passwordValidator,
-            ),
-            const SizedBox(height: 16),
-
-            if (isRegisterMode)
-              AuthInputField(
-                controller: confirmPasswordController!,
-                hintText: 'Konfirmasi Password',
-                obscureText: true,
-                validator: (value) => ValidatorUtil.confirmPasswordValidator(
-                  value,
-                  passwordController.text,
-                ),
-              ),
-
-            if (isRegisterMode) const SizedBox(height: 24),
-
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: authProvider.isAuthenticating ? null : onSubmit,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isRegisterMode
-                      ? const Color(0xFF007B9A)
-                      : const Color(0xFF004D7A),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: authProvider.isAuthenticating
-                    ? const SizedBox(
-                        height: 22,
-                        width: 22,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
-                      )
-                    : Text(
-                        title,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-              ),
-            ),
-          ],
+        AuthInputField(
+          controller: emailController,
+          hintText: 'Email',
+          keyboardType: TextInputType.emailAddress,
+          validator: ValidatorUtil.emailValidator,
         ),
+        const SizedBox(height: 16),
 
-        if (authProvider.isAuthenticating)
-          Container(
-            color: Colors.black54,
-            child: const Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 3,
-                color: Colors.white,
-              ),
+        AuthInputField(
+          controller: passwordController,
+          hintText: 'Password',
+          obscureText: true,
+          validator: ValidatorUtil.passwordValidator,
+        ),
+        const SizedBox(height: 16),
+
+        if (isRegisterMode)
+          AuthInputField(
+            controller: confirmPasswordController!,
+            hintText: 'Konfirmasi Password',
+            obscureText: true,
+            validator: (value) => ValidatorUtil.confirmPasswordValidator(
+              value,
+              passwordController.text,
             ),
           ),
+
+        if (isRegisterMode) const SizedBox(height: 24),
+
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: authProvider.isAuthenticating ? null : onSubmit,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isRegisterMode
+                  ? const Color(0xFF007B9A)
+                  : const Color(0xFF004D7A),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Text(
+              title,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
       ],
     );
   }

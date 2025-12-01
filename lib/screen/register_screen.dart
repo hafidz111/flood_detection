@@ -50,30 +50,51 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF132A3B),
-      appBar: AppBar(
-        title: const Text("Daftar Akun", style: TextStyle(color: Colors.white)),
-        backgroundColor: const Color(0xFF132A3B),
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: _formKey,
-            child: AuthForm(
-              title: "Daftar Sekarang",
-              emailController: email,
-              passwordController: password,
-              confirmPasswordController: confirmPassword,
-              onSubmit: _register,
-              isRegisterMode: true,
+    final authProvider = Provider.of<AuthProvider>(context);
+
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: const Color(0xFF132A3B),
+          appBar: AppBar(
+            title: const Text(
+              "Daftar Akun",
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: const Color(0xFF132A3B),
+            elevation: 0,
+            iconTheme: const IconThemeData(color: Colors.white),
+          ),
+          body: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Form(
+                key: _formKey,
+                child: AuthForm(
+                  title: "Daftar Sekarang",
+                  emailController: email,
+                  passwordController: password,
+                  confirmPasswordController: confirmPassword,
+                  onSubmit: _register,
+                  isRegisterMode: true,
+                ),
+              ),
             ),
           ),
         ),
-      ),
+        if (authProvider.isAuthenticating)
+          Positioned.fill(
+            child: Container(
+              color: Color.fromRGBO(0, 0, 0, 0.55),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 4,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
