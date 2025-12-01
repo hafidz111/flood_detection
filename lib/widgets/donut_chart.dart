@@ -7,6 +7,14 @@ class DonutChart extends StatelessWidget {
   final Color color;
   final String unit;
 
+  String _formatValue(num val) {
+        // Pindahkan fungsi _formatNumber ke dalam sini atau buat seperti ini
+        if ((val - val.toInt()).abs() < 1e-6) {
+            return val.toInt().toString();
+        }
+        return val.toStringAsFixed(1);
+    }
+
   const DonutChart({
     super.key,
     required this.title,
@@ -18,6 +26,7 @@ class DonutChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formattedText = _formatValue(value);
     double percentage = value / maxValue;
     if (percentage > 1.0) percentage = 1.0;
 
@@ -68,7 +77,7 @@ class DonutChart extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        '$value',
+                        formattedText,
                         style: TextStyle(
                           fontSize: valueFontSize,
                           fontWeight: FontWeight.bold,

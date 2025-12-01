@@ -37,6 +37,15 @@ class SensorProvider with ChangeNotifier {
     _startListeningToSensorData();
   }
 
+  Future<void> fetchSensorData() async {
+    _initialLoadTimer?.cancel();
+    _sensorSubscription?.cancel();
+
+    _currentSensorData = _getDefaultSensorData('Connecting...');
+    notifyListeners();
+    _startListeningToSensorData();
+  }
+
   void _startListeningToSensorData() {
     final sensorQuery = _firestore
         .collection('data_mahasiswa')
