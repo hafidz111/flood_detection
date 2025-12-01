@@ -9,18 +9,28 @@ class HistoryProvider with ChangeNotifier {
   final List<HistoryItem> _localHistory = [];
 
   bool _isLoading = false;
-  bool get isLoading => _isLoading;
+  bool _isInitialized = false;
 
+  bool get isLoading => _isLoading;
   List<HistoryItem> get history => _localHistory;
 
-  Future<void> fetchHistory() async {
+  bool get isInitialized => _isInitialized;
+
+  Future<void> fetchHistory({bool forceRefresh = false}) async {
+    if (_isInitialized && !forceRefresh) {
+      debugPrint('Skipping fetch: History already loaded.');
+      return;
+    }
+
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       throw Exception('Authentication required. User is not logged in.');
     }
 
-    _isLoading = true;
-    notifyListeners();
+    if (!_isInitialized) {
+      _isLoading = true;
+      notifyListeners();
+    }
 
     final DatabaseReference dbUserRef = _dbBaseRef
         .child('histories_by_user')
@@ -47,6 +57,8 @@ class HistoryProvider with ChangeNotifier {
         });
         _localHistory.sort((a, b) => b.date.compareTo(a.date));
       }
+
+      _isInitialized = true;
     } catch (e) {
       debugPrint('🚨 FIREBASE RTDB READ ERROR: $e');
     } finally {
@@ -82,10 +94,12 @@ class HistoryProvider with ChangeNotifier {
 
     try {
       await dbUserRef.push().set(historyEntry);
-      _localHistory.insert(
-        0,
-        HistoryItem(date: now, status: sensorData.floodStatus),
+      final newHistoryItem = HistoryItem(
+        date: now,
+        status: sensorData.floodStatus,
       );
+      _localHistory.insert(0, newHistoryItem);
+      _isInitialized = true;
       notifyListeners();
     } catch (e) {
       rethrow;

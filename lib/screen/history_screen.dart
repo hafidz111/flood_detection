@@ -17,9 +17,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<HistoryProvider>(context, listen: false).fetchHistory();
-    });
+    final historyProvider = Provider.of<HistoryProvider>(
+      context,
+      listen: false,
+    );
+
+    if (!historyProvider.isInitialized) {
+      historyProvider.fetchHistory();
+    }
   }
 
   @override
@@ -28,7 +33,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       builder: (context, historyProvider, child) {
         List<HistoryItem> historyList = historyProvider.history;
 
-        if (historyProvider.isLoading) {
+        if (historyProvider.isLoading && !historyProvider.isInitialized) {
           return const Center(child: CircularProgressIndicator());
         }
         if (historyList.isEmpty) {
