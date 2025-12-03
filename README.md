@@ -81,8 +81,6 @@ cd flood_detection
      - `ios/Runner/`
 4. **Pastikan structure data Firebase telah sesuai:**
 
----
-
 ### 4. Jalankan Aplikasi
 
 ```bash
