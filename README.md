@@ -61,7 +61,7 @@ Pastikan Anda telah menginstal:
 
 ### 2. Kloning Repositori
 ```bash
-git clone https://github.com/USERNAME/flood_detection.git
+git clone https://github.com/hafidz111/flood-detection.git
 cd flood_detection
 ```
 
